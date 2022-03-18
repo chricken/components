@@ -1,4 +1,7 @@
+import dom from './dom.js';
+
 const components = {
+    // Dummy-Element, um die Update-Funktion zu testen
     dummy({
         content = false,
         classes = false,
@@ -6,34 +9,33 @@ const components = {
     } = {}) {
         let zufall = ~~(Math.random() * 100);
 
+        // Inhalt updaten
         const update = ({
-            content: localContent
+            content: localContent = false
         }) => {
-            console.log(content, localContent);
             if (localContent) content = localContent;
             el.remove();
             el = create();
         }
 
         const create = () => {
-            const el = document.createElement('div');
-            if (content) el.innerHTML = content;
-            if (classes) el.className = classes.join(' ');
-            if (parent) parent.append(el);
+            const el = dom.create({ content, classes, parent });
             el.update = update;
 
-            let elZ = document.createElement('div');
-            elZ.innerHTML = zufall;
-            el.append(elZ);
+            // Zum Beweis, dass die Inhalt nur upgedatet wird und sich sonst nchts ändert
+            let elZ = dom.create({
+                content: zufall,
+                parent: el
+            })
 
             return el;
         }
 
         let el = create();
-
-
         return el;
-    }
+    },
+
+
 }
 
 export default components;
